@@ -66,10 +66,14 @@ export default function TextToSQLPage() {
       </div>
       
       <motion.div className="flex-1 bg-background text-foreground relative overflow-hidden pt-[64px]">
-        <section className="container mx-auto px-4 py-8 md:py-32">
+        <section className={`container mx-auto px-4 ${
+          hasOutput ? 'pt-12' : 'py-8 md:py-32'
+        }`}>
           <motion.div 
             variants={itemVariants}
-            className="text-center mb-6 md:mb-16"
+            className={`text-center ${
+              hasOutput ? 'mb-6' : 'mb-6 md:mb-16'
+            }`}
           >
             <AnimatePresence>
               {!hasOutput && (
@@ -127,60 +131,61 @@ export default function TextToSQLPage() {
             />
           </motion.div>
 
-          <motion.div 
-            variants={containerVariants}
-            className="max-w-4xl mx-auto mt-8 md:mt-20"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12">
-              {/* Frequently Searched */}
+          <AnimatePresence>
+            {!hasOutput && (
               <motion.div 
-                variants={itemVariants}
-                className="space-y-4 md:space-y-6 bg-card/30 p-4 md:p-6 rounded-xl md:rounded-2xl"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                className="max-w-4xl mx-auto mt-8 md:mt-20"
               >
-                <div className="flex items-center gap-2 md:gap-3">
-                  <History className="h-5 w-5 md:h-6 md:w-6 text-primary" />
-                  <h2 className="text-lg md:text-xl font-semibold">Frequently Searched</h2>
-                </div>
-                <div className="grid grid-cols-2 gap-2 md:gap-3">
-                  {frequentQueries.map((query, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <span className="cursor-pointer text-sm text-muted-foreground hover:text-primary transition-colors">
-                        {query}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12">
+                  {/* Frequently Searched */}
+                  <motion.div variants={itemVariants}>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <History className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                      <h2 className="text-lg md:text-xl font-semibold">Frequently Searched</h2>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 md:gap-3">
+                      {frequentQueries.map((query, index) => (
+                        <motion.div
+                          key={index}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <span className="cursor-pointer text-sm text-muted-foreground hover:text-primary transition-colors">
+                            {query}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
 
-              {/* Recent Queries */}
-              <motion.div 
-                variants={itemVariants}
-                className="space-y-4 md:space-y-6 bg-card/30 p-4 md:p-6 rounded-xl md:rounded-2xl"
-              >
-                <div className="flex items-center gap-2 md:gap-3">
-                  <TrendingUp className="h-5 w-5 md:h-6 md:w-6 text-primary" />
-                  <h2 className="text-lg md:text-xl font-semibold">Recent Queries</h2>
-                </div>
-                <div className="grid grid-cols-2 gap-2 md:gap-3">
-                  {trendingQueries.map((query, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <span className="cursor-pointer text-sm text-muted-foreground hover:text-primary transition-colors">
-                        {query}
-                      </span>
-                    </motion.div>
-                  ))}
+                  {/* Recent Queries */}
+                  <motion.div variants={itemVariants}>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <TrendingUp className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                      <h2 className="text-lg md:text-xl font-semibold">Recent Queries</h2>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 md:gap-3">
+                      {trendingQueries.map((query, index) => (
+                        <motion.div
+                          key={index}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <span className="cursor-pointer text-sm text-muted-foreground hover:text-primary transition-colors">
+                            {query}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
                 </div>
               </motion.div>
-            </div>
-          </motion.div>
+            )}
+          </AnimatePresence>
         </section>
       </motion.div>
     </div>
