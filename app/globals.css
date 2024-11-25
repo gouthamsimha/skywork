@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 :root {
+  --primary: 221 83% 53%;      /* Bright blue */
+  --primary-rgb: 59, 130, 246; /* RGB version of the blue */
+  
   /* Core Brand Colors */
   --color-primary: #1e3a8a;      /* dark blue for primary actions & branding */
   --color-primary-light: #2563eb; /* lighter blue for hover states */
@@ -38,4 +41,59 @@ body {
     transparent 100%
   );
   animation: shimmer 2s infinite;
+} 
+
+.glow-effect-search, .glow-effect-header {
+  position: relative;
+  isolation: isolate;
+}
+
+.glow-effect-search::before,
+.glow-effect-search::after,
+.glow-effect-header::before,
+.glow-effect-header::after {
+  content: '';
+  position: absolute;
+  background: linear-gradient(
+    to bottom right,
+    rgba(59, 130, 246, 0.3),
+    rgba(59, 130, 246, 0.1)
+  );
+  filter: blur(40px);
+  z-index: -1;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.glow-effect-search::before,
+.glow-effect-search::after {
+  inset: -20px;
+  border-radius: 9999px;
+}
+
+.glow-effect-header::before,
+.glow-effect-header::after {
+  content: '';
+  position: absolute;
+  inset: -10px;  /* This creates space around all sides */
+  background: linear-gradient(
+    to bottom right,
+    rgba(59, 130, 246, 0.3),
+    rgba(59, 130, 246, 0.1)
+  );
+  filter: blur(40px);
+  z-index: -1;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.glow-effect-search::before,
+.glow-effect-header::before {
+  filter: blur(60px);
+  opacity: 0.5;
+  background: linear-gradient(
+    to bottom right,
+    rgba(59, 130, 246, 0.2),
+    rgba(59, 130, 246, 0.05)
+  );
 } 

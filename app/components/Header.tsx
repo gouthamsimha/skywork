@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 export function Header() {
   return (
-    <header className="fixed top-0 z-50 w-full flex items-center justify-center">
+    <header className="w-full flex items-center justify-center">
       <div className="relative flex items-center">
         <img 
           src="/img/Skyworks.png"
