@@ -92,8 +92,8 @@ export default function TextToSQLPage() {
                     exit={{ opacity: 0 }}
                     className="text-3xl md:text-6xl font-bold mb-2 md:mb-4 tracking-tight"
                   >
-                    DAS_Ops
-                    <span className="block mt-1 md:mt-2 bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                    DAS_Ops Analytics and Insights
+                    <span className="block mt-1 md:mt-2 text-primary">
                       SQL Assistant
                     </span>
                   </motion.h1>
