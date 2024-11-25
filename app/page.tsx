@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Search, TrendingUp, History } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { Search, TrendingUp, History, Table as TableIcon, XCircle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { SearchBar } from '@/app/components/SearchBar'
 import { Header } from '@/app/components/Header'
+import type { QueryResult } from '@/app/lib/database'
+import { QueryOutput } from '@/app/components/QueryOutput'
 
 // Add example queries arrays
 const frequentQueries = [
@@ -30,6 +32,8 @@ const taglines = [
 
 export default function TextToSQLPage() {
   const [currentTagline] = useState(() => taglines[Math.floor(Math.random() * taglines.length)])
+  const [results, setResults] = useState<QueryResult[]>([])
+  const [error, setError] = useState<string>('')
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -53,6 +57,8 @@ export default function TextToSQLPage() {
     }
   }
 
+  const hasOutput = results.length > 0 || error !== ''
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -65,28 +71,60 @@ export default function TextToSQLPage() {
             variants={itemVariants}
             className="text-center mb-6 md:mb-16"
           >
-            <span className="shimmer inline-block px-4 py-1 mb-4 text-sm md:text-base font-medium tracking-wider border-[3px] border-primary/20 rounded-full bg-primary/5 shadow-glow">
-            ✨ AI Powered
-            </span>
-            <h1 className="text-3xl md:text-6xl font-bold mb-2 md:mb-4 tracking-tight">
-              DAS_Ops
-              <span className="block mt-1 md:mt-2 bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                SQL Assistant
-              </span>
-            </h1>
-            <motion.p 
-              variants={itemVariants}
-              className="text-base md:text-xl text-muted-foreground mb-6 md:mb-12"
-            >
-              {currentTagline}
-            </motion.p>
+            <AnimatePresence>
+              {!hasOutput && (
+                <>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="shimmer inline-block px-4 py-1 mb-4 text-sm md:text-base font-medium tracking-wider border-[3px] border-primary/20 rounded-full bg-primary/5 shadow-glow"
+                  >
+                    ✨ AI Powered
+                  </motion.span>
+                  <motion.h1
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-3xl md:text-6xl font-bold mb-2 md:mb-4 tracking-tight"
+                  >
+                    DAS_Ops
+                    <span className="block mt-1 md:mt-2 bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                      SQL Assistant
+                    </span>
+                  </motion.h1>
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    variants={itemVariants}
+                    className="text-base md:text-xl text-muted-foreground mb-6 md:mb-12"
+                  >
+                    {currentTagline}
+                  </motion.p>
+                </>
+              )}
+            </AnimatePresence>
 
             <motion.div 
               variants={itemVariants}
               className="max-w-3xl mx-auto relative glow-effect-search rounded-full z-10"
             >
-              <SearchBar placeholder="Enter your query in plain English..." />
+              <SearchBar 
+                placeholder="Enter your query in plain English..." 
+                onResults={setResults}
+                onError={setError}
+              />
             </motion.div>
+
+            <QueryOutput 
+              results={results}
+              error={error}
+              onClose={() => {
+                setError('')
+                setResults([])
+              }}
+            />
           </motion.div>
 
           <motion.div 

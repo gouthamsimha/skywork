@@ -1,79 +1,70 @@
 'use client'
 
 import { useState } from 'react'
+import { Search, Loader2, Command } from 'lucide-react'
 import { executeQuery, QueryResult } from '@/app/lib/database'
 
 interface SearchBarProps {
   placeholder: string;
+  onResults: (results: QueryResult[]) => void;
+  onError: (error: string) => void;
 }
 
-export function SearchBar({ placeholder }: SearchBarProps) {
+export function SearchBar({ placeholder, onResults, onError }: SearchBarProps) {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<QueryResult[]>([])
-  const [error, setError] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
+    setIsLoading(true)
     
     try {
       const queryResults = await executeQuery(query)
-      setResults(queryResults)
+      onResults(queryResults)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      onError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.metaKey || e.shiftKey) && e.key === 'Enter') {
+      e.preventDefault()
+      handleSubmit(e as any)
     }
   }
 
   return (
-    <div className="w-full space-y-6">
-      <form onSubmit={handleSubmit} className="w-full">
-        <textarea
-          className="w-full p-4 h-32 text-lg border rounded-lg"
-          placeholder={placeholder}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button 
-          type="submit" 
-          className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-        >
-          Execute Query
-        </button>
-      </form>
-
-      {error && (
-        <div className="p-4 bg-red-100 text-red-700 rounded-lg">
-          {error}
+    <form onSubmit={handleSubmit} className="relative">
+      <div className="relative group">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg blur-md group-hover:blur-lg transition-all" />
+        <div className="relative bg-background rounded-lg border border-primary/20 shadow-lg">
+          <div className="flex items-center px-4 py-2 gap-3">
+            <Command className="w-5 h-5 text-muted-foreground" />
+            <textarea
+              className="flex-1 bg-transparent border-0 focus:ring-0 focus:outline-none text-lg placeholder:text-muted-foreground resize-none h-[56px] py-4"
+              placeholder={placeholder}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <button 
+              type="submit"
+              disabled={isLoading}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Search className="w-4 h-4" />
+              )}
+              Execute
+            </button>
+          </div>
         </div>
-      )}
-
-      {results.length > 0 && (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-200">
-            <thead>
-              <tr>
-                {results[0].columns.map((column, i) => (
-                  <th key={i} className="border border-gray-200 p-2 bg-gray-50">
-                    {column}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {results[0].values.map((row, i) => (
-                <tr key={i}>
-                  {row.map((cell, j) => (
-                    <td key={j} className="border border-gray-200 p-2">
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+      </div>
+    </form>
   )
 }
 
