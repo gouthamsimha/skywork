@@ -1,9 +1,10 @@
 import initSqlJs from 'sql.js';
+import Papa from 'papaparse';
 
 let SQL: any;
 let db: any;
 
-export async function initDatabase() {
+export async function initDatabaseFromCSV() {
   if (!SQL) {
     SQL = await initSqlJs({
       locateFile: (file: string) => `/sql.js/${file}`
@@ -11,49 +12,63 @@ export async function initDatabase() {
   }
 
   if (!db) {
-    db = new SQL.Database();
-    
-    // Create sample tables and insert data
-    db.run(`
-      CREATE TABLE IF NOT EXISTS products (
-        product_id INTEGER PRIMARY KEY,
-        product_name TEXT,
-        category TEXT,
-        price DECIMAL(10,2),
-        release_date DATE
-      );
+    try {
+      db = new SQL.Database();
+      
+      const response = await fetch(`${window.location.origin}/api/matches`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV data: ${response.statusText}`);
+      }
+      
+      const { data: csvData, fileName } = await response.json();
+      
+      // Extract table name from file name (remove .csv and use only base name)
+      const tableName = fileName.split('.')[0].toLowerCase();
+      
+      // Parse CSV data
+      const parsedData = Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: true
+      });
 
-      CREATE TABLE IF NOT EXISTS sales (
-        sale_id INTEGER PRIMARY KEY,
-        product_id INTEGER,
-        quantity INTEGER,
-        sale_date DATE,
-        FOREIGN KEY (product_id) REFERENCES products(product_id)
-      );
+      if (parsedData.data.length === 0) {
+        throw new Error('No data found in CSV');
+      }
 
-      -- Insert sample product data
-      INSERT OR IGNORE INTO products VALUES
-        (1, 'Smartphone X', 'Electronics', 999.99, '2024-01-15'),
-        (2, 'Laptop Pro', 'Electronics', 1499.99, '2024-02-01'),
-        (3, 'Wireless Earbuds', 'Electronics', 199.99, '2024-03-10'),
-        (4, 'Smart Watch', 'Electronics', 299.99, '2024-03-15'),
-        (5, 'Tablet Ultra', 'Electronics', 799.99, '2024-02-20');
+      // Generate CREATE TABLE statement from CSV headers
+      const headers = Object.keys(parsedData.data[0]);
+      const createTableSQL = `
+        CREATE TABLE IF NOT EXISTS ${tableName} (
+          ${headers.map(header => `${header} TEXT`).join(',\n          ')}
+        );
+      `;
 
-      -- Insert sample sales data
-      INSERT OR IGNORE INTO sales VALUES
-        (1, 1, 10, '2024-03-01'),
-        (2, 2, 5, '2024-03-05'),
-        (3, 3, 15, '2024-03-10'),
-        (4, 4, 8, '2024-03-15'),
-        (5, 5, 12, '2024-03-20');
-    `);
+      // Create table
+      db.run(createTableSQL);
+
+      // Generate and execute INSERT statements
+      const values = parsedData.data.map(row => 
+        `(${headers.map(header => `'${(row[header] || '').replace(/'/g, "''")}'`).join(', ')})`
+      ).join(',\n          ');
+
+      const insertSQL = `
+        INSERT INTO ${tableName} (${headers.join(', ')})
+        VALUES
+          ${values};
+      `;
+
+      db.run(insertSQL);
+    } catch (error) {
+      console.error('Database initialization error:', error);
+      throw error;
+    }
   }
 
   return db;
 }
 
 export async function executeQuery(query: string): Promise<QueryResult[]> {
-  const db = await initDatabase();
+  const db = await initDatabaseFromCSV();
   try {
     const results = db.exec(query);
     return results.map(result => ({
