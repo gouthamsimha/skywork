@@ -15,12 +15,12 @@ export async function initDatabaseFromCSV() {
     try {
       db = new SQL.Database();
       
-      const response = await fetch(`${window.location.origin}/api/matches`);
+      const response = await fetch('/data/file1.csv');
       if (!response.ok) {
         throw new Error(`Failed to fetch CSV data: ${response.statusText}`);
       }
       
-      const { data: csvData, fileName } = await response.json();
+      const csvData = await response.text();
       
       // Remove table name extraction from filename and use 'testing' instead
       const tableName = 'testing';
