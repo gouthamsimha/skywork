@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { executeQuery, QueryResult } from '@/app/lib/database'
 
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  placeholder: string;
 }
 
-export function SearchBar({ onSearch }: SearchBarProps) {
+export function SearchBar({ placeholder }: SearchBarProps) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<QueryResult[]>([])
   const [error, setError] = useState<string>('')
@@ -19,7 +19,6 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     try {
       const queryResults = await executeQuery(query)
       setResults(queryResults)
-      onSearch(query)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     }
@@ -30,7 +29,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
       <form onSubmit={handleSubmit} className="w-full">
         <textarea
           className="w-full p-4 h-32 text-lg border rounded-lg"
-          placeholder="Enter your SQL query..."
+          placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />

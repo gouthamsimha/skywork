@@ -1,72 +1,195 @@
 'use client'
 
-import { Header } from '@/app/components/Header'
+import React, { useState } from 'react'
+import { Search, TrendingUp, History } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { SearchBar } from '@/app/components/SearchBar'
+import { Header } from '@/app/components/Header'
+
+// Add example queries arrays
+const frequentQueries = [
+  "Show all products from last month",
+  "Top 5 selling products",
+  "Products with low inventory",
+  "Most popular categories"
+]
+
+const trendingQueries = [
+  "Revenue this quarter",
+  "Best performing products",
+  "Sales by region",
+  "Inventory alerts"
+]
+
+const taglines = [
+  "Convert natural language to SQL with ease",
+  "Your SQL assistant for DAS Operations",
+  "Get instant SQL queries from plain English",
+  "Simplify database operations with AI"
+]
 
 export default function TextToSQLPage() {
-  const handleSearch = (query: string) => {
-    console.log('Search query:', query)
-    // Handle the search query here
+  const [currentTagline] = useState(() => taglines[Math.floor(Math.random() * taglines.length)])
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  }
+
+  const shineVariants = {
+    initial: {
+      backgroundPosition: "200% 0",
+    },
+    animate: {
+      backgroundPosition: "-200% 0",
+    },
   }
 
   return (
-    <main className="min-h-screen bg-background flex flex-col">
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="min-h-screen bg-background text-foreground relative overflow-hidden"
+    >
       <Header />
       
-      <section className="flex-1 flex flex-col items-center justify-start w-full px-4 sm:px-6 py-8 sm:py-12 gap-8 sm:gap-12 mt-16 sm:mt-20">
-        <div className="w-full max-w-4xl space-y-4">
-          <div className="flex justify-center">
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium border border-primary bg-primary text-white shadow-sm hover:bg-primary/90 transition-colors relative overflow-hidden">
-              <span className="relative z-10">✨ AI Powered</span>
-              <div className="absolute inset-0 shimmer" />
-            </div>
-          </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-primary">
-            Skyworks Text to SQL Converter
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50 -z-10" />
+      
+      <section className="container mx-auto px-4 py-8 md:py-32 mt-24">
+        <motion.div 
+          variants={itemVariants}
+          className="text-center mb-6 md:mb-16"
+        >
+          <motion.div 
+            variants={itemVariants}
+            className="inline-block mb-2"
+          >
+            <span className="relative inline-flex items-center px-3 py-1 text-sm md:text-base rounded-full bg-primary/10 font-bold border-2 border-primary/30">
+              <motion.span
+                className="ml-1"
+                style={{
+                  background: `linear-gradient(
+                    90deg,
+                    hsl(var(--primary)) 0%,
+                    hsl(var(--primary-foreground)) 20%,
+                    hsl(var(--primary)) 30%,
+                    hsl(var(--primary)) 40%,
+                    hsl(var(--primary-foreground)) 50%,
+                    hsl(var(--primary)) 60%,
+                    hsl(var(--primary)) 100%
+                  )`,
+                  backgroundSize: "200% 100%",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                }}
+                variants={shineVariants}
+                initial="initial"
+                animate="animate"
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                ✨ AI Powered
+              </motion.span>
+            </span>
+          </motion.div>
+          <h1 className="text-3xl md:text-6xl font-bold mb-2 md:mb-4 tracking-tight">
+            DAS_Ops
+            <span className="block mt-1 md:mt-2 bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+              SQL Assistant
+            </span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-center opacity-90">
-            Convert natural language queries into SQL statements for Skyworks database
-          </p>
-        </div>
+          <motion.p 
+            variants={itemVariants}
+            className="text-base md:text-xl text-muted-foreground mb-6 md:mb-12"
+          >
+            {currentTagline}
+          </motion.p>
 
-        <div className="w-full max-w-3xl px-4">
-          <SearchBar onSearch={handleSearch} />
-        </div>
+          <motion.div 
+            variants={itemVariants}
+            className="max-w-3xl mx-auto relative glow-effect-search rounded-full"
+          >
+            <SearchBar placeholder="Enter your query in plain English..." />
+          </motion.div>
+        </motion.div>
 
-        <div className="w-full max-w-4xl px-4">
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6">
-            Example Queries
-          </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <div className="bg-surface p-4 sm:p-6 rounded-lg shadow-md">
-              <p className="font-medium mb-2">Natural Language:</p>
-              <p className="text-text-light mb-4">"Show all products released in the last month"</p>
-              <p className="font-medium mb-2">SQL:</p>
-              <code className="block bg-background/50 p-3 rounded text-sm">
-                {`SELECT product_name, release_date, category 
-                FROM products 
-                WHERE release_date >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
-                ORDER BY release_date DESC;`}
-              </code>
-            </div>
-            <div className="bg-surface p-4 sm:p-6 rounded-lg shadow-md">
-              <p className="font-medium mb-2">Natural Language:</p>
-              <p className="text-text-light mb-4">"Find top 5 selling products this year"</p>
-              <p className="font-medium mb-2">SQL:</p>
-              <code className="block bg-background/50 p-3 rounded text-sm">
-                {`SELECT p.product_name, 
-                       SUM(s.quantity) as total_sales 
-                FROM products p
-                JOIN sales s ON p.product_id = s.product_id 
-                WHERE YEAR(s.sale_date) = YEAR(CURRENT_DATE) 
-                GROUP BY p.product_name 
-                ORDER BY total_sales DESC 
-                LIMIT 5;`}
-              </code>
-            </div>
+        <motion.div 
+          variants={containerVariants}
+          className="max-w-4xl mx-auto mt-8 md:mt-20"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12">
+            {/* Frequently Searched */}
+            <motion.div 
+              variants={itemVariants}
+              className="space-y-4 md:space-y-6 bg-card/30 p-4 md:p-6 rounded-xl md:rounded-2xl"
+            >
+              <div className="flex items-center gap-2 md:gap-3">
+                <History className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                <h2 className="text-lg md:text-xl font-semibold">Frequently Searched</h2>
+              </div>
+              <div className="grid grid-cols-2 gap-2 md:gap-3">
+                {frequentQueries.map((query, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="cursor-pointer text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {query}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Recent Queries */}
+            <motion.div 
+              variants={itemVariants}
+              className="space-y-4 md:space-y-6 bg-card/30 p-4 md:p-6 rounded-xl md:rounded-2xl"
+            >
+              <div className="flex items-center gap-2 md:gap-3">
+                <TrendingUp className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                <h2 className="text-lg md:text-xl font-semibold">Recent Queries</h2>
+              </div>
+              <div className="grid grid-cols-2 gap-2 md:gap-3">
+                {trendingQueries.map((query, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="cursor-pointer text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {query}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
-    </main>
+    </motion.div>
   )
 }
