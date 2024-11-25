@@ -558,20 +558,17 @@ video {
 .relative {
   position: relative;
 }
-.sticky {
-  position: sticky;
+.left-0 {
+  left: 0px;
+}
+.right-0 {
+  right: 0px;
 }
 .right-full {
   right: 100%;
 }
 .top-0 {
   top: 0px;
-}
-.left-0 {
-  left: 0px;
-}
-.right-0 {
-  right: 0px;
 }
 .z-10 {
   z-index: 10;
@@ -595,9 +592,6 @@ video {
 }
 .mb-6 {
   margin-bottom: 1.5rem;
-}
-.ml-1 {
-  margin-left: 0.25rem;
 }
 .mr-4 {
   margin-right: 1rem;
@@ -788,8 +782,8 @@ video {
 .border {
   border-width: 1px;
 }
-.border-2 {
-  border-width: 2px;
+.border-\[3px\] {
+  border-width: 3px;
 }
 .border-gray-200 {
   --tw-border-opacity: 1;
@@ -921,6 +915,9 @@ video {
 .tracking-tight {
   letter-spacing: -0.025em;
 }
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
 .text-primary {
   color: var(--color-primary);
 }
@@ -1009,23 +1006,28 @@ body {
 } 
 
 @keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
+  to {
+    background-position: 200% center;
   }
 }
 
 .shimmer {
   background: linear-gradient(
     90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
+    var(--color-primary) 0%,
+    var(--color-primary-light) 30%,
+    #ffffff 50%,
+    var(--color-primary-light) 70%,
+    var(--color-primary) 100%
   );
-  animation: shimmer 2s infinite;
-} 
+  background-size: 200% auto;
+  color: var(--color-primary);
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2.2s linear infinite;
+}
 
 .glow-effect-search, .glow-effect-header {
   position: relative;
@@ -1059,13 +1061,13 @@ body {
 .glow-effect-header::after {
   content: '';
   position: absolute;
-  inset: -10px;  /* This creates space around all sides */
+  inset: -20px;
   background: linear-gradient(
     to bottom right,
-    rgba(59, 130, 246, 0.3),
-    rgba(59, 130, 246, 0.1)
+    rgba(59, 130, 246, 0.4),
+    rgba(59, 130, 246, 0.15)
   );
-  filter: blur(40px);
+  filter: blur(60px);
   z-index: -1;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
@@ -1073,12 +1075,12 @@ body {
 
 .glow-effect-search::before,
 .glow-effect-header::before {
-  filter: blur(60px);
-  opacity: 0.5;
+  filter: blur(80px);
+  opacity: 0.6;
   background: linear-gradient(
     to bottom right,
-    rgba(59, 130, 246, 0.2),
-    rgba(59, 130, 246, 0.05)
+    rgba(59, 130, 246, 0.3),
+    rgba(59, 130, 246, 0.1)
   );
 }
 
@@ -1221,7 +1223,8 @@ body {
     --tw-scale-y: 1;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
-} 
+}
+
 /*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[13].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app/layout.tsx","import":"Inter","arguments":[{"subsets":["latin"]}],"variableName":"inter"} ***!
   \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/

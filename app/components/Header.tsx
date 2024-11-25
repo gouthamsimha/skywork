@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 export function Header() {
   return (
     <header className="w-full flex items-center justify-center">
-      <div className="relative flex items-center">
+      <div className="relative flex items-center glow-effect-header">
         <img 
           src="/img/Skyworks.png"
           alt="Skyworks Logo"

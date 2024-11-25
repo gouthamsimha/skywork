@@ -10,6 +10,7 @@ module.exports = {
       animation: {
         'fade-in': 'fadeIn 1s ease-in',
         'blob': 'blob 7s infinite',
+        'shimmer': 'shimmer 2s infinite',
       },
       keyframes: {
         fadeIn: {
@@ -28,6 +29,11 @@ module.exports = {
           },
           '100%': {
             transform: 'translate(0px, 0px) scale(1)',
+          },
+        },
+        shimmer: {
+          '100%': {
+            transform: 'translateX(100%)',
           },
         },
       },

@@ -53,15 +53,6 @@ export default function TextToSQLPage() {
     }
   }
 
-  const shineVariants = {
-    initial: {
-      backgroundPosition: "200% 0",
-    },
-    animate: {
-      backgroundPosition: "-200% 0",
-    },
-  }
-
   return (
     <div className="flex flex-col min-h-screen">
       <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -74,42 +65,9 @@ export default function TextToSQLPage() {
             variants={itemVariants}
             className="text-center mb-6 md:mb-16"
           >
-            <motion.div 
-              variants={itemVariants}
-              className="inline-block mb-2"
-            >
-              <span className="relative inline-flex items-center px-3 py-1 text-sm md:text-base rounded-full bg-primary/10 font-bold border-2 border-primary/30">
-                <motion.span
-                  className="ml-1"
-                  style={{
-                    background: `linear-gradient(
-                      90deg,
-                      hsl(var(--primary)) 0%,
-                      hsl(var(--primary-foreground)) 20%,
-                      hsl(var(--primary)) 30%,
-                      hsl(var(--primary)) 40%,
-                      hsl(var(--primary-foreground)) 50%,
-                      hsl(var(--primary)) 60%,
-                      hsl(var(--primary)) 100%
-                    )`,
-                    backgroundSize: "200% 100%",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    color: "transparent",
-                  }}
-                  variants={shineVariants}
-                  initial="initial"
-                  animate="animate"
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                >
-                  ✨ AI Powered
-                </motion.span>
-              </span>
-            </motion.div>
+            <span className="shimmer inline-block px-4 py-1 mb-4 text-sm md:text-base font-medium tracking-wider border-[3px] border-primary/20 rounded-full bg-primary/5 shadow-glow">
+            ✨ AI Powered
+            </span>
             <h1 className="text-3xl md:text-6xl font-bold mb-2 md:mb-4 tracking-tight">
               DAS_Ops
               <span className="block mt-1 md:mt-2 bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
