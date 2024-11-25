@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Core Brand Colors */
+  --color-primary: #1e3a8a;      /* dark blue for primary actions & branding */
+  --color-primary-light: #2563eb; /* lighter blue for hover states */
+  --color-primary-bg: #eff6ff;    /* very light blue for backgrounds */
+  
+  /* Neutral Colors */
+  --color-background: #f8fafc;    /* main background */
+  --color-surface: #ffffff;       /* card/section backgrounds */
+  --color-text: #1e293b;         /* primary text */
+  --color-text-light: #64748b;   /* secondary text */
+}
+
+body {
+  color: rgb(var(--foreground-rgb));    
+  min-height: 100vh;
+  overflow-x: hidden;
+} 
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+} 
