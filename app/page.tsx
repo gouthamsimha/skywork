@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, TrendingUp, History, Table as TableIcon, XCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SearchBar } from '@/app/components/SearchBar'
@@ -31,9 +31,13 @@ const taglines = [
 ]
 
 export default function TextToSQLPage() {
-  const [currentTagline] = useState(() => taglines[Math.floor(Math.random() * taglines.length)])
+  const [currentTagline, setCurrentTagline] = useState(taglines[0])
   const [results, setResults] = useState<QueryResult[]>([])
   const [error, setError] = useState<string>('')
+
+  useEffect(() => {
+    setCurrentTagline(taglines[Math.floor(Math.random() * taglines.length)])
+  }, [])
 
   const containerVariants = {
     hidden: { opacity: 0 },
