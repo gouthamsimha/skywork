@@ -22,8 +22,8 @@ export async function initDatabaseFromCSV() {
       
       const { data: csvData, fileName } = await response.json();
       
-      // Extract table name from file name (remove .csv and use only base name)
-      const tableName = fileName.split('.')[0].toLowerCase();
+      // Remove table name extraction from filename and use 'testing' instead
+      const tableName = 'testing';
       
       // Parse CSV data
       const parsedData = Papa.parse(csvData, {
